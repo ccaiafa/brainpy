@@ -208,20 +208,21 @@ streamlines = LocalTracking(csd_peaks, classifier, seeds, affine=np.eye(4), step
 # Tracking
 streamlines = list(streamlines)
 
+# Saving tractography to disk
+from nibabel.streamlines import Tractogram, save, load
+tractogram = Tractogram(streamlines, affine_to_rasmm=affine)
+save(tractogram, '/N/dc2/projects/lifebid/code/ccaiafa/dipy/brainpy/output/test.trk')
+
+# Load tractography from disk
+trk_file = load('/N/dc2/projects/lifebid/code/ccaiafa/dipy/brainpy/output/test.trk')
+streamlines = trk_file.streamlines
+
 # visualzie the streamlines
 streamlines_actor = fvtk.line(streamlines[:100000])
 #fvtk.rm(ren,fodf_peaks)
 #fvtk.rm(ren, seeds_im)
 fvtk.add(ren,streamlines_actor)
 fvtk.show(ren)
-
-from nibabel.streamlines import Tractogram, save
-
-tractogram = Tractogram(streamlines, affine_to_rasmm=affine)
-
-save(tractogram, 'test.trk')
-
-# For the next time we will save to disk.
 
 # After that we will do Anatomically Constrained Tracking.
 
